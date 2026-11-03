@@ -149,3 +149,73 @@ small{color:var(--mute);text-align:center;font-weight:400}
 .toast[hidden]{display:none}
 @media (max-height:700px){.modes button{padding:7px 0}.chip{padding:8px 6px}.chip b{font-size:20px}.dots{margin-top:8px}.play{width:76px;height:76px}.top{height:64px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---- v3: 가로 모드 (아이폰/폰 가로, 낮은 화면) ---- */
+@media (orientation:landscape) and (max-height:700px){
+  #app{flex-direction:row;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+  .view{min-width:0;min-height:0}
+  .tabbar{order:-1;flex-direction:column;width:86px;margin:8px 0 8px 10px;align-self:center;gap:4px;border-radius:30px;padding:6px}
+  .tab{flex:none;padding:10px 0;border-radius:24px}
+  .tab span{font-size:11px}
+
+  :root{--hs:calc(100dvh - 78px)}
+  #view-timer.active{grid-template-rows:56px auto auto auto 1fr}
+  #view-stopwatch.active{grid-template-rows:56px auto minmax(0,1fr) auto}
+  #view-timer.active,#view-stopwatch.active{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:22px;padding:0 16px 8px 10px;align-items:center}
+  .top{height:56px;grid-column:1/-1;grid-row:1}
+  .top-center{flex-direction:row;gap:12px}
+  .mode-pill{font-size:14px;padding:5px 14px}
+  .ghost{width:40px;height:40px;left:0}#btn-reset{left:auto;right:0}
+
+  .hero{grid-column:1;grid-row:2/-1;width:min(var(--hs),44vw);margin:0;align-self:center}
+  .phase-time{font-size:min(calc(var(--hs)*.27),11.5vw)}
+  .sw-time{font-size:min(calc(var(--hs)*.21),9vw)}
+  .phase-name{font-size:16px}
+  .next-line{font-size:12px;margin-top:2px}
+
+  #view-timer .modes{grid-column:2;grid-row:2;width:100%;margin:0 0 8px}
+  #view-timer .chips{grid-column:2;grid-row:3;width:100%;margin:0}
+  #view-timer .dots{grid-column:2;grid-row:4;margin:10px 0 0;max-width:none}
+  #view-timer .controls{grid-column:2;grid-row:5;width:100%;padding:0;align-self:stretch}
+  .chip{padding:8px 6px}.chip b{font-size:21px}.chip span{font-size:11px}
+  .modes button{padding:7px 0;font-size:13px}
+
+  #view-stopwatch .cap-row{grid-column:2;grid-row:2;width:100%;padding:0 0 6px}
+  #view-stopwatch .laps{grid-column:2;grid-row:3;width:100%;margin:0;padding:0;align-self:stretch;font-size:16px}
+  #view-stopwatch .controls{grid-column:2;grid-row:4;width:100%;padding:0}
+  .laps li{padding:7px 2px}
+
+  .controls{flex:none;padding:0}
+  .row-controls>.slot{min-width:96px;min-height:46px;padding:9px 8px;font-size:14px}
+  .slot.big{min-height:56px;font-size:16px}
+  .play{width:72px;height:72px;font-size:28px}
+  .play-label{font-size:12px}
+
+  .more{padding:0 12px 8px;width:100%;max-width:560px;align-self:center}
+  .more h3{margin:2px 0 8px;font-size:17px}.row{padding:11px 14px;margin-bottom:7px}
+  .sheet{align-items:center;justify-content:center}
+  .sheet-body{width:min(94vw,560px);max-height:calc(100dvh - 16px);overflow:auto;border-radius:24px;padding:14px 20px}
+  .sheet-body h3{margin-bottom:8px}.step-row{padding:4px 0}.step-btn{width:44px;height:44px}.stepper b{font-size:24px}
+  .toast{bottom:16px}
+  .prank-card{display:grid;grid-template-columns:auto auto;grid-template-rows:1fr auto auto;column-gap:28px;align-items:center;width:auto;max-width:92vw;text-align:left}
+  .prank-card img,.prank-fallback{grid-row:1/-1;grid-column:1;max-height:84dvh;max-width:44vw;width:auto}
+  .prank-fallback{font-size:min(60dvh,40vw)}
+  .prank-text{grid-column:2;grid-row:1;align-self:end;font-size:clamp(28px,6vw,44px)}
+  .prank-hint{grid-column:2;grid-row:2;align-self:start}
+}
+
+/* 태블릿/큰 화면: 컨트롤이 너무 멀리 벌어지지 않게 */
+.row-controls{width:min(94vw,460px);align-self:center}
+/* 폭이 좁은 가로 화면 (작은 폰) */
+@media (orientation:landscape) and (max-height:700px) and (max-width:760px){
+  .tabbar{width:66px;margin-left:6px}.tab span{font-size:10px}
+  .hero{width:min(var(--hs),36vw)}
+  #view-timer.active,#view-stopwatch.active{column-gap:14px;padding-right:12px}
+  .chip span{font-size:10px;white-space:nowrap}.chip b{font-size:18px}
+  .modes button{font-size:12px;white-space:nowrap}
+  .row-controls{width:100%;gap:6px}
+  .row-controls>.slot{min-width:0;flex:1;padding:8px 4px;font-size:13px}
+  .slot.big{font-size:14px}
+  .play{width:62px;height:62px;font-size:24px}
+}
+@media (orientation:landscape) and (max-height:700px){.row-controls{width:100%;align-self:stretch}}
