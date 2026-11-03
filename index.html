@@ -20,18 +20,25 @@
 <body>
 <div id="app">
 
-  <!-- 라운드 / 타바타 공용 화면 -->
+  <!-- 타이머 (AMRAP / EMOM / 타바타 / 인터벌) -->
   <section id="view-timer" class="view active">
     <header class="top">
       <button class="ghost" id="btn-settings" aria-label="설정"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
       <div class="top-center">
-        <div class="mode-pill" id="mode-title">라운드</div>
-        <div class="top-total">총 <b id="total-left">05:10</b> 남음</div>
+        <div class="mode-pill" id="mode-title">AMRAP 12:00</div>
+        <div class="top-total">총 <b id="total-left">12:10</b> 남음</div>
       </div>
       <button class="ghost" id="btn-reset" aria-label="초기화"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v4.5h-4.5"/></svg></button>
     </header>
 
-    <div class="hero" id="phase-box" data-kind="prep">
+    <div class="modes" id="modes" role="tablist">
+      <button data-mode="amrap" class="active">AMRAP</button>
+      <button data-mode="emom">EMOM</button>
+      <button data-mode="tabata">타바타</button>
+      <button data-mode="interval">인터벌</button>
+    </div>
+
+    <div class="hero" id="phase-box" data-kind="prep" role="button" aria-label="시작 또는 일시정지">
       <svg class="ring" viewBox="0 0 300 300">
         <circle class="ring-bg" cx="150" cy="150" r="132"/>
         <circle class="ring-fg" id="ring" cx="150" cy="150" r="132"/>
@@ -39,34 +46,49 @@
       <div class="hero-in">
         <div class="phase-name" id="phase-name">준비</div>
         <div class="phase-time" id="phase-time">00:10</div>
+        <div class="next-line" id="next-line">다음 · AMRAP 12:00</div>
       </div>
     </div>
 
     <div class="chips">
-      <div class="chip work"><span>운동</span><b id="chip-work">01:00</b></div>
-      <div class="chip rest"><span>휴식</span><b id="chip-rest">00:00</b></div>
-      <div class="chip"><span>남은 라운드</span><b id="rounds-left">5</b></div>
+      <div class="chip" id="chip1"><span id="c1l"></span><b id="c1v"></b></div>
+      <div class="chip" id="chip2"><span id="c2l"></span><b id="c2v"></b></div>
+      <div class="chip" id="chip3"><span id="c3l"></span><b id="c3v"></b></div>
     </div>
     <div class="dots" id="dots"></div>
 
-    <div class="controls">
-      <button class="play" id="btn-play" aria-label="시작"><span id="play-icon">▶</span></button>
-      <div class="play-label" id="play-label">시작</div>
+    <div class="controls row-controls">
+      <button class="pill slot" id="slot-l">−1</button>
+      <div class="play-col">
+        <button class="play" id="btn-play" aria-label="시작"><span id="play-icon">▶</span></button>
+        <div class="play-label" id="play-label">시작</div>
+      </div>
+      <button class="pill slot" id="slot-r">건너뛰기</button>
     </div>
   </section>
 
-  <!-- 스톱워치 -->
+  <!-- 스톱워치 / FOR TIME -->
   <section id="view-stopwatch" class="view">
-    <header class="top"><div class="top-center"><div class="mode-pill">스톱워치</div></div></header>
-    <div class="hero sw-hero" data-kind="work"><div class="hero-in"><div class="phase-time sw-time" id="sw-time">00:00.0</div></div></div>
+    <header class="top"><div class="top-center"><div class="mode-pill">FOR TIME</div><div class="top-total" id="sw-cap-label">타임캡 없음</div></div></header>
+    <div class="cap-row" id="cap-row">
+      <span>타임캡</span>
+      <button data-cap="0" class="active">없음</button><button data-cap="5">5분</button><button data-cap="10">10분</button><button data-cap="15">15분</button><button data-cap="20">20분</button><button data-cap="30">30분</button>
+    </div>
+    <div class="hero sw-hero" data-kind="work" id="sw-hero" role="button" aria-label="시작 또는 일시정지">
+      <svg class="ring" viewBox="0 0 300 300">
+        <circle class="ring-bg" cx="150" cy="150" r="132"/>
+        <circle class="ring-fg" id="sw-ring" cx="150" cy="150" r="132"/>
+      </svg>
+      <div class="hero-in"><div class="phase-time sw-time" id="sw-time">00:00.0</div></div>
+    </div>
     <ul class="laps" id="laps"></ul>
     <div class="controls row-controls">
-      <button class="pill" id="sw-lap">랩</button>
+      <button class="pill slot" id="sw-lap">랩</button>
       <div class="play-col">
         <button class="play" id="sw-play" aria-label="시작"><span id="sw-icon">▶</span></button>
         <div class="play-label" id="sw-label">시작</div>
       </div>
-      <button class="pill" id="sw-reset">초기화</button>
+      <button class="pill slot" id="sw-reset">초기화</button>
     </div>
   </section>
 
@@ -74,17 +96,19 @@
   <section id="view-more" class="view">
     <header class="top"><div class="top-center"><div class="mode-pill">더보기</div></div></header>
     <div class="more">
-      <h3>🎉 깜짝 이벤트</h3>
-      <label class="row"><span>시작 누르면 깜짝 사진</span><input type="checkbox" id="opt-prank" checked></label>
+      <h3>설정</h3>
+      <label class="row"><span>시작 누르면 깜짝 사진 🎉</span><input type="checkbox" id="opt-prank" checked></label>
       <label class="row"><span>효과음</span><input type="checkbox" id="opt-sound" checked></label>
+      <label class="row"><span>음성 안내 <small>"10초", "절반 남았습니다"</small></span><input type="checkbox" id="opt-voice" checked></label>
       <label class="row"><span>진동</span><input type="checkbox" id="opt-vibrate" checked></label>
+      <div class="more-head"><h3>운동 기록</h3><button class="pill small-pill" id="logs-clear">모두 삭제</button></div>
+      <ul class="logs" id="logs"></ul>
     </div>
   </section>
 
   <nav class="tabbar">
-    <button class="tab active" data-tab="tabata"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>타바타</span></button>
-    <button class="tab" data-tab="round"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg><span>라운드</span></button>
-    <button class="tab" data-tab="stopwatch"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13l3.5-3.5M10 2.5h4"/></svg><span>스톱워치</span></button>
+    <button class="tab active" data-tab="timer"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg><span>타이머</span></button>
+    <button class="tab" data-tab="stopwatch"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>FOR TIME</span></button>
     <button class="tab" data-tab="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>더보기</span></button>
   </nav>
 </div>
@@ -93,13 +117,13 @@
 <div id="sheet" class="sheet" hidden>
   <div class="sheet-body">
     <h3 id="sheet-title">설정</h3>
-    <label class="field"><span>준비 (초)</span><input type="number" id="f-prep" min="0" max="600" inputmode="numeric"></label>
-    <label class="field"><span>운동 (초)</span><input type="number" id="f-work" min="1" max="3600" inputmode="numeric"></label>
-    <label class="field"><span>휴식 (초)</span><input type="number" id="f-rest" min="0" max="3600" inputmode="numeric"></label>
-    <label class="field"><span>라운드</span><input type="number" id="f-rounds" min="1" max="99" inputmode="numeric"></label>
+    <div class="presets" id="sheet-presets"></div>
+    <div id="sheet-fields"></div>
     <div class="btn-row"><button class="pill" id="sheet-cancel">취소</button><button class="pill primary" id="sheet-save">저장</button></div>
   </div>
 </div>
+
+<div class="toast" id="toast" hidden></div>
 
 <!-- 깜짝 오버레이 -->
 <div id="prank" class="prank" hidden>

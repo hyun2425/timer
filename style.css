@@ -8,7 +8,7 @@ body[data-kind="prep"]{--accent:#ffc83d;--accent2:#ff8a3d}
 body[data-kind="work"]{--accent:#c6ff3d;--accent2:#2ee6a6}
 body[data-kind="rest"]{--accent:#ff5fa2;--accent2:#a66bff}
 body[data-kind="done"]{--accent:#7cf0ff;--accent2:#6b8bff}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+*{touch-action:manipulation;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 html,body{margin:0;height:100%;color:var(--ink);overflow:hidden;overscroll-behavior:none;
   font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
 body{background:var(--bg)}
@@ -21,7 +21,7 @@ svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-lin
 .view{display:none;flex:1;min-height:0;flex-direction:column;align-items:center}
 .view.active{display:flex}
 
-.top{position:relative;display:flex;align-items:center;justify-content:center;height:84px;flex:none;width:100%}
+.top{position:relative;display:flex;align-items:center;justify-content:center;height:76px;flex:none;width:100%}
 .top-center{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
 .mode-pill{padding:6px 16px;border-radius:999px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-weight:700;font-size:15px;letter-spacing:.02em}
 .top-total{font-size:13px;color:var(--mute)}
@@ -31,7 +31,7 @@ svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-lin
 .ghost svg{width:22px;height:22px}
 #btn-reset{left:auto;right:18px}
 
-.hero{position:relative;flex:none;width:min(80vw,46dvh,360px);aspect-ratio:1;margin:6px 0 4px}
+.hero{position:relative;flex:none;width:min(74vw,36dvh,340px);aspect-ratio:1;margin:4px 0;cursor:pointer}
 .ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
 .ring circle{fill:none;stroke-width:14;stroke-linecap:round}
 .ring-bg{stroke:rgba(255,255,255,.09)}
@@ -39,8 +39,8 @@ svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-lin
 .hero-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
 .phase-name{font-weight:800;font-size:20px;color:var(--accent);letter-spacing:.08em;padding:5px 16px;border-radius:999px;background:color-mix(in srgb,var(--accent) 16%,transparent)}
 .phase-time{font-family:var(--num);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.05;font-size:clamp(64px,20vw,104px);letter-spacing:-.04em}
-.sw-hero{width:min(86vw,380px);aspect-ratio:auto;height:180px;border-radius:32px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.sw-time{font-size:clamp(48px,15vw,76px)}
+.sw-hero{width:min(66vw,30dvh,300px)}
+.sw-time{font-size:clamp(44px,14vw,70px)}
 
 .chips{display:flex;gap:10px;width:min(92vw,420px);margin-top:10px}
 .chip{flex:1;padding:12px 8px;border-radius:20px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
@@ -90,8 +90,6 @@ small{color:var(--mute);text-align:center;font-weight:400}
 .sheet[hidden],.prank[hidden]{display:none}
 .sheet-body{width:100%;background:#17172a;border-top:1px solid var(--line);border-radius:28px 28px 0 0;padding:22px 22px calc(var(--sab) + 22px)}
 .sheet-body h3{margin:0 0 14px}
-.field{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:18px}
-.field input{width:110px;font-size:22px;font-weight:700;text-align:center;padding:8px;border-radius:12px;border:0;background:rgba(255,255,255,.08);color:#fff;user-select:text;-webkit-user-select:text}
 .sheet .btn-row{margin-top:14px}
 
 .prank{position:fixed;inset:0;z-index:50;background:radial-gradient(circle,#2b1055,#000);display:grid;place-items:center}
@@ -105,3 +103,49 @@ small{color:var(--mute);text-align:center;font-weight:400}
   0%{transform:scale(0) rotate(-20deg)}35%{transform:scale(1.35) rotate(8deg)}
   55%{transform:scale(.85) rotate(-5deg)}75%{transform:scale(1.1) rotate(2deg)}100%{transform:scale(1) rotate(0)}}
 @keyframes wiggle{from{transform:rotate(-4deg) scale(1)}to{transform:rotate(4deg) scale(1.08)}}
+
+/* ---- v2: 모드 / 슬롯 / 시트 / 기록 ---- */
+.modes{display:flex;gap:6px;padding:4px;margin:0 0 6px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);width:min(92vw,420px);flex:none}
+.modes button{flex:1;padding:9px 0;border-radius:999px;font-weight:700;font-size:14px;color:var(--mute);transition:all .2s}
+.modes button.active{background:var(--ink);color:#0b0b14}
+.next-line{font-size:13px;color:var(--mute);margin-top:6px;font-weight:600;text-align:center;max-width:70%}
+.phase-name{font-size:18px}
+.chip.hl b{color:var(--accent)}
+.row-controls{gap:10px}
+.row-controls>.slot{min-width:104px;min-height:52px;padding:12px 10px;text-align:center}
+.slot.big{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0b0b14;border-color:transparent;font-size:18px;min-height:68px;box-shadow:0 8px 28px color-mix(in srgb,var(--accent) 40%,transparent)}
+.slot:active{transform:scale(.94)}
+.slot[hidden]{display:block;visibility:hidden}
+.slot:disabled{opacity:.35}
+.play{width:88px;height:88px}
+.cap-row{display:flex;align-items:center;gap:6px;width:min(94vw,440px);overflow-x:auto;flex:none;padding:2px 2px 6px}
+.cap-row span{font-size:13px;color:var(--mute);font-weight:600;margin-right:2px;white-space:nowrap}
+.cap-row button{padding:7px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:700;white-space:nowrap}
+.cap-row button.active{background:var(--ink);color:#0b0b14}
+.laps li{gap:10px}
+.laps li span:first-child{color:var(--mute);width:42px}
+.laps li .split{flex:1;text-align:right}
+.laps li .tot{color:var(--mute);width:96px;text-align:right}
+.laps:empty::before{content:"랩을 누르면 구간 기록이 쌓여요";color:var(--mute);font-family:inherit;font-size:14px;display:block;text-align:center;padding-top:14px}
+.more-head{display:flex;justify-content:space-between;align-items:center}
+.small-pill{padding:7px 14px;font-size:13px}
+.row small{display:block;color:var(--mute);font-weight:400;font-size:12px;text-align:left;margin-top:2px}
+.logs{list-style:none;margin:0 0 20px;padding:0}
+.logs li{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;margin-bottom:8px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.logs .l-desc{font-weight:700}.logs .l-date{font-size:12px;color:var(--mute);margin-top:2px}
+.logs .l-res{font-family:var(--num);font-weight:700;font-size:20px;color:var(--accent)}
+.logs:empty::before{content:"아직 기록이 없어요. 운동을 끝내면 자동으로 저장돼요 💪";color:var(--mute);font-size:14px;display:block;text-align:center;padding:16px 0}
+
+.presets{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin:0 -4px 6px}
+.presets button{flex:none;padding:9px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;font-weight:700;white-space:nowrap}
+.presets button.on{background:var(--ink);color:#0b0b14}
+.step-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:17px;font-weight:600}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper b{min-width:92px;text-align:center;font-family:var(--num);font-size:28px;font-variant-numeric:tabular-nums}
+.step-btn{width:52px;height:52px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:26px;font-weight:700;line-height:1;display:grid;place-items:center}
+.step-btn:active{background:var(--ink);color:#0b0b14}
+.sheet .btn-row .pill{flex:1}
+.toast{position:fixed;left:50%;bottom:calc(var(--sab) + 108px);transform:translateX(-50%);z-index:60;padding:12px 20px;border-radius:999px;background:var(--ink);color:#0b0b14;font-weight:700;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.toast[hidden]{display:none}
+@media (max-height:700px){.modes button{padding:7px 0}.chip{padding:8px 6px}.chip b{font-size:20px}.dots{margin-top:8px}.play{width:76px;height:76px}.top{height:64px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
