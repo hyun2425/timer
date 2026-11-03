@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>타이머</title>
+<meta name="theme-color" content="#0b0b14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="타이머">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- 라운드 / 타바타 공용 화면 -->
+  <section id="view-timer" class="view active">
+    <header class="top">
+      <button class="ghost" id="btn-settings" aria-label="설정"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
+      <div class="top-center">
+        <div class="mode-pill" id="mode-title">라운드</div>
+        <div class="top-total">총 <b id="total-left">05:10</b> 남음</div>
+      </div>
+      <button class="ghost" id="btn-reset" aria-label="초기화"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v4.5h-4.5"/></svg></button>
+    </header>
+
+    <div class="hero" id="phase-box" data-kind="prep">
+      <svg class="ring" viewBox="0 0 300 300">
+        <circle class="ring-bg" cx="150" cy="150" r="132"/>
+        <circle class="ring-fg" id="ring" cx="150" cy="150" r="132"/>
+      </svg>
+      <div class="hero-in">
+        <div class="phase-name" id="phase-name">준비</div>
+        <div class="phase-time" id="phase-time">00:10</div>
+      </div>
+    </div>
+
+    <div class="chips">
+      <div class="chip work"><span>운동</span><b id="chip-work">01:00</b></div>
+      <div class="chip rest"><span>휴식</span><b id="chip-rest">00:00</b></div>
+      <div class="chip"><span>남은 라운드</span><b id="rounds-left">5</b></div>
+    </div>
+    <div class="dots" id="dots"></div>
+
+    <div class="controls">
+      <button class="play" id="btn-play" aria-label="시작"><span id="play-icon">▶</span></button>
+      <div class="play-label" id="play-label">시작</div>
+    </div>
+  </section>
+
+  <!-- 스톱워치 -->
+  <section id="view-stopwatch" class="view">
+    <header class="top"><div class="top-center"><div class="mode-pill">스톱워치</div></div></header>
+    <div class="hero sw-hero" data-kind="work"><div class="hero-in"><div class="phase-time sw-time" id="sw-time">00:00.0</div></div></div>
+    <ul class="laps" id="laps"></ul>
+    <div class="controls row-controls">
+      <button class="pill" id="sw-lap">랩</button>
+      <div class="play-col">
+        <button class="play" id="sw-play" aria-label="시작"><span id="sw-icon">▶</span></button>
+        <div class="play-label" id="sw-label">시작</div>
+      </div>
+      <button class="pill" id="sw-reset">초기화</button>
+    </div>
+  </section>
+
+  <!-- 더보기 -->
+  <section id="view-more" class="view">
+    <header class="top"><div class="top-center"><div class="mode-pill">더보기</div></div></header>
+    <div class="more">
+      <h3>🎉 깜짝 이벤트</h3>
+      <label class="row"><span>시작 누르면 깜짝 사진</span><input type="checkbox" id="opt-prank" checked></label>
+      <label class="row"><span>효과음</span><input type="checkbox" id="opt-sound" checked></label>
+      <label class="row"><span>진동</span><input type="checkbox" id="opt-vibrate" checked></label>
+    </div>
+  </section>
+
+  <nav class="tabbar">
+    <button class="tab active" data-tab="tabata"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>타바타</span></button>
+    <button class="tab" data-tab="round"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg><span>라운드</span></button>
+    <button class="tab" data-tab="stopwatch"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13l3.5-3.5M10 2.5h4"/></svg><span>스톱워치</span></button>
+    <button class="tab" data-tab="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>더보기</span></button>
+  </nav>
+</div>
+
+<!-- 설정 시트 -->
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-body">
+    <h3 id="sheet-title">설정</h3>
+    <label class="field"><span>준비 (초)</span><input type="number" id="f-prep" min="0" max="600" inputmode="numeric"></label>
+    <label class="field"><span>운동 (초)</span><input type="number" id="f-work" min="1" max="3600" inputmode="numeric"></label>
+    <label class="field"><span>휴식 (초)</span><input type="number" id="f-rest" min="0" max="3600" inputmode="numeric"></label>
+    <label class="field"><span>라운드</span><input type="number" id="f-rounds" min="1" max="99" inputmode="numeric"></label>
+    <div class="btn-row"><button class="pill" id="sheet-cancel">취소</button><button class="pill primary" id="sheet-save">저장</button></div>
+  </div>
+</div>
+
+<!-- 깜짝 오버레이 -->
+<div id="prank" class="prank" hidden>
+  <canvas id="confetti"></canvas>
+  <div class="prank-card" id="prank-card">
+    <img id="prank-img" alt="">
+    <div class="prank-fallback" id="prank-fallback">🤪</div>
+    <div class="prank-text">띠용~~!! 🎉</div>
+    <div class="prank-hint">화면을 터치하면 타이머가 시작돼요</div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
