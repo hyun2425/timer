@@ -192,29 +192,11 @@ $('btn-play').onclick = onPlay;
 /* ---------- 깜짝 사진 ---------- */
 const DEFAULT_IMG = 'prank.jpg'; // 이 파일을 교체하면 기본 사진이 바뀝니다
 const imgEl = $('prank-img'), fbEl = $('prank-fallback');
-function getPrankSrc(){ return store.get('prank_img', null) || DEFAULT_IMG; }
 function applyPrankImg(el){
   el.onerror = () => { el.style.display='none'; if(el===imgEl) fbEl.style.display='block'; };
   el.onload = () => { el.style.display='block'; if(el===imgEl) fbEl.style.display='none'; };
-  el.src = getPrankSrc();
+  if(!el.getAttribute('src')) el.src = DEFAULT_IMG;
 }
-applyPrankImg($('prank-preview'));
-
-$('prank-file').onchange = e => {
-  const f = e.target.files[0]; if(!f) return;
-  const img = new Image(), url = URL.createObjectURL(f);
-  img.onload = () => {
-    const s = Math.min(1, 1000/Math.max(img.width,img.height));
-    const c = document.createElement('canvas'); c.width = img.width*s; c.height = img.height*s;
-    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-    const data = c.toDataURL('image/jpeg', .85);
-    if(!store.set('prank_img', data)) alert('사진이 너무 커서 저장하지 못했어요.');
-    URL.revokeObjectURL(url); applyPrankImg($('prank-preview'));
-  };
-  img.src = url; e.target.value = '';
-};
-$('prank-reset').onclick = () => { store.del('prank_img'); applyPrankImg($('prank-preview')); };
-$('prank-test').onclick = () => showPrank(() => {});
 
 /* ---------- 폭죽 ---------- */
 const cv = $('confetti'), g = cv.getContext('2d');
