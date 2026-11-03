@@ -109,22 +109,28 @@ function onPlay(){
   startRun();
 }
 
+const CIRC = 2*Math.PI*132;
 function render(){
   const c = cfg[mode], seg = engine.segs[engine.idx];
   $('mode-title').textContent = mode==='tabata' ? '타바타' : '라운드';
   $('total-left').textContent = fmt(totalLeft());
   const kind = engine.done ? 'done' : seg.kind;
+  document.body.dataset.kind = kind;
   $('phase-box').dataset.kind = kind;
-  $('phase-name').textContent = engine.done ? '완료!' : (seg.kind==='prep' ? '준비' : seg.label);
+  $('phase-name').textContent = engine.done ? '완료!' : seg.label;
   $('phase-time').textContent = engine.done ? '00:00' : fmt(remainingInSeg());
-  // 하단 정보 패널: 다음 / 운동 시간
-  const info = $('info-box');
-  if(kind==='rest'){ info.className='info-box'; $('info-label').textContent='다음 운동'; $('info-time').textContent=fmt(c.work); }
-  else { info.className='info-box'; $('info-label').textContent='운동'; $('info-time').textContent=fmt(c.work); }
-  if(c.rest>0 && kind==='work'){ info.classList.add('rest'); $('info-label').textContent='휴식'; $('info-time').textContent=fmt(c.rest); }
+  const frac = engine.done ? 1 : Math.min(1, engine.elapsed / seg.len);
+  $('ring').style.strokeDasharray = CIRC;
+  $('ring').style.strokeDashoffset = CIRC * (1 - frac);
+  $('chip-work').textContent = fmt(c.work);
+  $('chip-rest').textContent = fmt(c.rest);
   let doneRounds = 0;
   engine.segs.forEach((s,i)=>{ if(s.kind==='work' && (i<engine.idx || engine.done)) doneRounds++; });
+  const cur = engine.done ? -1 : (seg.kind==='work' ? doneRounds : -1);
   $('rounds-left').textContent = Math.max(0, c.rounds - doneRounds);
+  const dots = $('dots');
+  if(dots.children.length !== c.rounds){ dots.innerHTML = '<i></i>'.repeat(c.rounds); }
+  [...dots.children].forEach((d,i)=>{ d.className = i<doneRounds ? 'done' : i===cur ? 'cur' : ''; });
   $('play-icon').textContent = engine.done ? '↺' : engine.running ? '❚❚' : '▶';
   $('play-label').textContent = engine.done ? '다시' : engine.running ? '일시정지' : (engine.started ? '계속' : '시작');
   document.title = engine.running ? fmt(remainingInSeg()) : '타이머';
@@ -156,6 +162,7 @@ function showTab(t){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===t));
   const v = t==='stopwatch' ? 'stopwatch' : t==='more' ? 'more' : 'timer';
   document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
+  if(v!=='timer') document.body.dataset.kind = 'work'; else render();
   $('view-'+v).classList.add('active');
   if(v==='timer' && t!==mode){
     if(engine.running) pauseRun();
